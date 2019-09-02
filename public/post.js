@@ -1,7 +1,6 @@
 $(document).ready(function() {
-  
   function parseMssidn(n) {
-        var strArray = n.split("");
+        let strArray = n.split("");
         strArray[0] == "0" ? 
             strArray.splice(0, 1, "254") : 
             (strArray[0] == "+" ? strArray.splice(0,1) : strArray);
@@ -12,17 +11,16 @@ $(document).ready(function() {
   let defaultTimeout;
   function startCountdown() {
     $(".processing span span").text("[" + defaultTimeout + "s]");
-    var counter = setInterval(function() {
+    let counter = setInterval(function() {
       defaultTimeout--;
       let parsedTime = (defaultTimeout < 10) ? "0" + defaultTimeout : defaultTimeout; 
       if(defaultTimeout>=0) {
         $(".processing span span").text("[" + parsedTime + "s]");
-        return defaultTimeout;
+      } else {
+        //console.log(defaultTimeout);
+        $(".processing span span").text("");
+        clearInterval(counter);
       }
-      //console.log(defaultTimeout);
-      $(".processing span span").text("");
-      clearInterval(counter);
-      return defaultTimeout;
     }, 1000);
   }
   
@@ -30,14 +28,14 @@ $(document).ready(function() {
     $(".processing span").text("Processing");
     $(".processing i").show();
     /* Request Validation */
-    var amnt = $(".amount").val();
-    var number = $(".number").val();
+    let amnt = $(".amount").val();
+    let number = $(".number").val();
     
     if(amnt.length !=0 && !(isNaN(amnt)) && amnt>0) {
-      var regExPattern = /^(?:254|\+254|0)?(7(?:(?:[129][0-9])|(?:0[0-8])|(4[0-1]))[0-9]{6})$/;
-      var isNumberValid = regExPattern.test(number);
+      let regExPattern = /^(?:254|\+254|0)?(7(?:(?:[129][0-9])|(?:0[0-8])|(4[0-1]))[0-9]{6})$/;
+      let isNumberValid = regExPattern.test(number);
       if(isNumberValid) {
-        var data = {
+        let data = {
           amnt: amnt,
           number: parseMssidn(number)
         }
@@ -51,11 +49,12 @@ $(document).ready(function() {
           beforeSend: function() {
             $(".overlay-wrapper").show();
           },
-          success:function(e) {            
+          success:function(e) {
+            alert(JSON.stringify(e));
             if(e.status=="success") {
-              var requestId = e.requestId;
-              var listenerArgs = {
-                "requestId": requestId
+              let requestID = e.requestID;
+              let listenerArgs = {
+                "requestID": requestID
               };
               $(".processing span").html("Transaction Initiated. Make sure to authorize the Transaction. <br>"
                                          + "Processing <span></span>");
@@ -65,8 +64,8 @@ $(document).ready(function() {
               startCountdown();
               
               /*Start checking cache updates where transId*/
-              var callBackStatus;
-              var listener = setInterval(function() {
+              let callBackStatus;
+              let listener = setInterval(function() {
                 $.ajax({
                   url: "https://ngbookstore.glitch.me/listener",
                   type: "POST",
@@ -74,10 +73,12 @@ $(document).ready(function() {
                   dataType: "json",
                   async: true,
                   success: function(e) {
-                    var status = e.status;
+                    //alert(JSON.stringify(e));
+                    let status = e.status;
                     callBackStatus = JSON.parse(e.callBackStatus);
                     
                     if(status !== "PendingCompletion") {
+                      alert(JSON.stringify(e));
                       $(".processing i").hide();
                       $(".processing span").text("Transaction Completed With a StatusCode: " + status);
                       clearInterval(listener);
@@ -120,17 +121,6 @@ $(document).ready(function() {
     } else {
       alert ("Invalid Amount");
     }
-    
-  
-    
     return false;
-  });
-  
-  $.ajax({
-    url: "https://grand-aries.glitch.me/June%2011,%202019",
-    type: "GET",
-    success: function(e) {
-      //alert(JSON.stringify(e));
-    }
   });
 });

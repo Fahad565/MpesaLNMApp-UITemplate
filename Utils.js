@@ -1,11 +1,6 @@
 const https = require("https");
 
 module.exports = {
-  tiny: function(string) {
-    if(typeof(string)!=="string") throw new TypeError("Tiny only accepts Strings");
-    return string.replace(/\s/g,"");
-  },
-  
   getTimeStamp: function() {
     function parseDate(e) { return (e < 10) ? "0" + e : e; }
     var _date = new Date();
