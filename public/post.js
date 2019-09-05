@@ -1,6 +1,6 @@
 $(document).ready(function() {
   function parseMssidn(n) {
-        let strArray = n.split("");
+        var strArray = n.split("");
         strArray[0] == "0" ? 
             strArray.splice(0, 1, "254") : 
             (strArray[0] == "+" ? strArray.splice(0,1) : strArray);
@@ -8,12 +8,13 @@ $(document).ready(function() {
         return strArray.join("");
   }
   
-  let defaultTimeout;
+  var defaultTimeout;
   function startCountdown() {
+    alert("Countdown() fn @Test6")
     $(".processing span span").text("[" + defaultTimeout + "s]");
-    let counter = setInterval(function() {
+    var counter = setInterval(function() {
       defaultTimeout--;
-      let parsedTime = (defaultTimeout < 10) ? "0" + defaultTimeout : defaultTimeout; 
+      var parsedTime = (defaultTimeout < 10) ? "0" + defaultTimeout : defaultTimeout; 
       if(defaultTimeout>=0) {
         $(".processing span span").text("[" + parsedTime + "s]");
       } else {
@@ -24,18 +25,18 @@ $(document).ready(function() {
     }, 1000);
   }
   
-  $("#inputForm").submit(function() {
+ $("#inputForm").submit(function() {
     $(".processing span").text("Processing");
     $(".processing i").show();
     /* Request Validation */
-    let amnt = $(".amount").val();
-    let number = $(".number").val();
+    var amnt = $(".amount").val();
+    var number = $(".number").val();
     
     if(amnt.length !=0 && !(isNaN(amnt)) && amnt>0) {
-      let regExPattern = /^(?:254|\+254|0)?(7(?:(?:[129][0-9])|(?:0[0-8])|(4[0-1]))[0-9]{6})$/;
-      let isNumberValid = regExPattern.test(number);
+      var regExPattern = /^(?:254|\+254|0)?(7(?:(?:[129][0-9])|(?:0[0-8])|(4[0-1]))[0-9]{6})$/;
+      var isNumberValid = regExPattern.test(number);
       if(isNumberValid) {
-        let data = {
+        var data = {
           amnt: amnt,
           number: parseMssidn(number)
         }
@@ -47,25 +48,29 @@ $(document).ready(function() {
           dataType: "json",
           async: true,
           beforeSend: function() {
+            alert("beforeSend() @Test1");
             $(".overlay-wrapper").show();
+            alert("Activated Overlay @Test2");
           },
           success:function(e) {
+            alert("ajaxSuccess() @Test3");
             alert(JSON.stringify(e));
             if(e.status=="success") {
-              let requestID = e.requestID;
-              let listenerArgs = {
+              var requestID = e.requestID;
+              var listenerArgs = {
                 "requestID": requestID
               };
+              alert(JSON.stringify(listenerArgs)+"ConditionCheck @Test4");
               $(".processing span").html("Transaction Initiated. Make sure to authorize the Transaction. <br>"
                                          + "Processing <span></span>");
-              
+              alert("StartingCountdown() @Test5");
               /*Include TransactionProcessing CountDown*/
               defaultTimeout = 50;
               startCountdown();
               
               /*Start checking cache updates where transId*/
-              let callBackStatus;
-              let listener = setInterval(function() {
+              var callBackStatus;
+              var listener = setInterval(function() {
                 $.ajax({
                   url: "https://ngbookstore.glitch.me/listener",
                   type: "POST",
@@ -74,7 +79,7 @@ $(document).ready(function() {
                   async: true,
                   success: function(e) {
                     //alert(JSON.stringify(e));
-                    let status = e.status;
+                    var status = e.status;
                     callBackStatus = JSON.parse(e.callBackStatus);
                     
                     if(status !== "PendingCompletion") {

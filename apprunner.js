@@ -152,7 +152,7 @@ app.post("/process", function(req, res) {
       */
       setTimeout(function() {
         flushAndUpdate();
-      }, 60000)
+      }, 60000);
       
     } else { 
       msg.status="error"
