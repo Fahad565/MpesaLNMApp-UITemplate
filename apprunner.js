@@ -1,4 +1,4 @@
-// init project
+/*C2B Backend Server*/
 const prettyjson = require('prettyjson');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 const mongo = require("mongodb");
 const https = require("https");
 const Utils = require("./Utils.js");
-const fs = require("fs");
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,10 +15,6 @@ app.use(function(req,res,next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-
-const options = {
-  noColor: true
-};
 
 /** 3) Serve an HTML file */
 app.get("/", function(req, res) {
@@ -250,9 +245,4 @@ app.post("/listener", function(req,res) {
 const listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
-
-/*https.createServer({
-  key: fs.readFileSync(__dirname + "/aux/key.pem"),
-  cert: fs.readFileSync(__dirname + "/aux/certificate.pem")
-}, app).listen(process.env.PORT, ()=>{console.log('Your app is listening on port ' + process.env.PORT)});*/
 
