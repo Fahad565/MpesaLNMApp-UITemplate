@@ -15,7 +15,8 @@
     "body-parser": "^1.19.0",
     "https": "^1.0.0",
     "mongoose": "^5.4.19", 
-    "mongodb": "^3.1.17"
+    "mongodb": "^3.1.17",
+    "file-system": "^2.2.2"
   },
   "engines": {
     "node": "8.x"

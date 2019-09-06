@@ -6,10 +6,16 @@ const mongoose = require("mongoose");
 const mongo = require("mongodb");
 const https = require("https");
 const Utils = require("./Utils.js");
+const fs = require("fs");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(function(req,res,next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 const options = {
   noColor: true
@@ -55,8 +61,6 @@ function updateLocalCache(requestID, status) {
 function flushAndUpdate() {
   if(localCache.length>0) {
     localCache.filter((entry)=> {
-      console.log(`@TestX: CallBackStatusCheck - callBackStatus equals false ? ${entry.callBackStatus == false}`);
-      console.log(`Initial localCache = ${JSON.stringify(localCache)}, Current Index = ${localCache.indexOf(entry)}, Current Element = ${JSON.stringify(entry)}`);
       if(!(entry.callBackStatus)) {
         let data = {
           "requestID": entry.requestID, 
@@ -84,7 +88,7 @@ function flushAndUpdate() {
               process.exit(0);
             }
             /*Delete Current Entry*/
-            console.log(`Updated localCache = ${JSON.stringify(localCache)}`);
+            console.log(`Updated localCache = ${JSON.stringify(localCache)}  @Test4 [From flushAndUpdate]`);
           });
         });
       };
@@ -177,7 +181,7 @@ app.post("/hooks/confirm", function(req,res) {
   }
   
   let resultCode = req.body.Body.stkCallback.ResultCode;
-  let status = resultCode == "1032" ? "Cancelled" : (resultCode == "0" ? "Success" : "Failed");
+  let status = resultCode == "1032" ? "Cancelled" : (resultCode == "1037" ? "RequestTimeOut" : (resultCode == "0" ? "Success" : "Failed"));
   let resultDesc = req.body.Body.stkCallback.ResultDesc;
   
   //updateLocalCache sets callBackStatus to true
@@ -246,3 +250,9 @@ app.post("/listener", function(req,res) {
 const listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+/*https.createServer({
+  key: fs.readFileSync(__dirname + "/aux/key.pem"),
+  cert: fs.readFileSync(__dirname + "/aux/certificate.pem")
+}, app).listen(process.env.PORT, ()=>{console.log('Your app is listening on port ' + process.env.PORT)});*/
+

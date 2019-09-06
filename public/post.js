@@ -1,4 +1,17 @@
 $(document).ready(function() {
+  
+  function handleError(uiComponent) {
+    var msg = uiComponent == "amount" ? "Amount" : "Phone Number";
+    $("."+uiComponent).css("border","1px solid #e01515").attr("placeholder","Invalid " + msg);
+  }
+  
+  //reset input error messages
+  $("input").click(function() {
+    $("input").css("border","1px solid #eee");
+    $(".amount").attr("placeholder","Enter Amount");
+    $(".number").attr("placeholder", "Phone Number");
+  })
+  
   function parseMssidn(n) {
         var strArray = n.split("");
         strArray[0] == "0" ? 
@@ -10,7 +23,6 @@ $(document).ready(function() {
   
   var defaultTimeout;
   function startCountdown() {
-    alert("Countdown() fn @Test6")
     $(".processing span span").text("[" + defaultTimeout + "s]");
     var counter = setInterval(function() {
       defaultTimeout--;
@@ -48,22 +60,16 @@ $(document).ready(function() {
           dataType: "json",
           async: true,
           beforeSend: function() {
-            alert("beforeSend() @Test1");
             $(".overlay-wrapper").show();
-            alert("Activated Overlay @Test2");
           },
           success:function(e) {
-            alert("ajaxSuccess() @Test3");
-            alert(JSON.stringify(e));
             if(e.status=="success") {
               var requestID = e.requestID;
               var listenerArgs = {
                 "requestID": requestID
               };
-              alert(JSON.stringify(listenerArgs)+"ConditionCheck @Test4");
               $(".processing span").html("Transaction Initiated. Make sure to authorize the Transaction. <br>"
                                          + "Processing <span></span>");
-              alert("StartingCountdown() @Test5");
               /*Include TransactionProcessing CountDown*/
               defaultTimeout = 50;
               startCountdown();
@@ -78,12 +84,10 @@ $(document).ready(function() {
                   dataType: "json",
                   async: true,
                   success: function(e) {
-                    //alert(JSON.stringify(e));
                     var status = e.status;
                     callBackStatus = JSON.parse(e.callBackStatus);
                     
                     if(status !== "PendingCompletion") {
-                      alert(JSON.stringify(e));
                       $(".processing i").hide();
                       $(".processing span").text("Transaction Completed With a StatusCode: " + status);
                       clearInterval(listener);
@@ -103,13 +107,13 @@ $(document).ready(function() {
                   $(".processing span").text("Operation Timed Out. Please Try Again.");
                 } else {
                   $(".processing i").hide();
-                  $(".processing span").text("ERR_CODE 500: Error Fetching Processing Results.");
+                  $(".processing span").text("Operation Timed Out. Please Try Again. | ERR_CODE 500: Error Fetching Processing Results.");
                 }
                 
                 /*Allow 4s window before closing overlay*/
                 setTimeout(function() {
                   $(".overlay-wrapper").hide();
-                },4000);
+                },5000);
               }, 51000);
               
             } else {
@@ -121,10 +125,10 @@ $(document).ready(function() {
           }
         });
       } else {
-        alert("Invalid Phone Number");
+        handleError("number");
       }
     } else {
-      alert ("Invalid Amount");
+      handleError("amount");
     }
     return false;
   });
