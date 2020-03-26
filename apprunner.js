@@ -176,7 +176,10 @@ app.post("/hooks/confirm", function(req,res) {
   }
   
   let resultCode = req.body.Body.stkCallback.ResultCode;
-  let status = resultCode == "1032" ? "Cancelled" : (resultCode == "1037" ? "RequestTimeOut" : (resultCode == "0" ? "Success" : "Failed"));
+  let status = resultCode == "1032" ? "Cancelled" : (
+    resultCode == "1037" ? "RequestTimeOut" : (
+      resultCode == "0" ? "Success" : "Failed"));
+  
   let resultDesc = req.body.Body.stkCallback.ResultDesc;
   
   //updateLocalCache sets callBackStatus to true
