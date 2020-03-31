@@ -38,6 +38,12 @@ body{
   width: 250px;
   transform: translate(-50%, -50%);
 }
+.pagehdr p {
+  margin: 0;
+}
+.pagehdr p span {
+  color: #1b961b;
+}
 .wrapper {
   position: absolute;
   padding-top: 10px;
@@ -95,10 +101,27 @@ input:focus {
 }
 
 @media screen and (max-width: 508px) {
+  .pagehdr {
+    position: inherit;
+    transform: none;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    margin: auto;
+    width: 50%;
+  }
   .wrapper, .overlay {
     width: 80%;
   }
+  .wrapper {
+    position: inherit;
+    border: none;
+    transform:  none;
+    height: 200px;
+    margin: auto;
+  }
   .process {
     width: 50%;
+    margin: 30px auto 10px;
   }
 }
