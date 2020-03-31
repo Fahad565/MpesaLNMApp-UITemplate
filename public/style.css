@@ -99,7 +99,46 @@ input:focus {
 .process:focus {
   outline: none !important;
 }
-
+@media screen and (max-height: 500px) {
+  .pagehdr {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 20%;
+    transform: translate(0, -70%);
+  }
+  .pagehdr .ph {
+    font-size: 16px;
+  }
+  .pagehdr .dlm {
+    display: none;
+  }
+}
+@media screen and (max-height: 320px) {
+  body {
+    min-height: 320px;
+    height: 320px;
+  }
+  .pagehdr {
+    position:relative;
+    top:0;
+    transform:none;
+    height: 80px;
+    line-height: 80px;
+  }
+  .wrapper {
+    top: 88px;
+    transform: translate(-50%, 0);
+  }
+}
+@media screen and (max-width: 300px) {
+  .pagehdr {
+    text-align: center;
+  }
+  body {
+    width: 300px;
+  }
+}
 @media screen and (max-width: 508px) {
   .pagehdr {
     position: inherit;
@@ -107,8 +146,7 @@ input:focus {
     height: 100px;
     line-height: 100px;
     text-align: center;
-    margin: auto;
-    width: 50%;
+    width: 100%;
   }
   .wrapper, .overlay {
     width: 80%;
