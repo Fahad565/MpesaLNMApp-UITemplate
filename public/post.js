@@ -11,11 +11,11 @@ $(document).ready(function() {
   /*
     ** Reset inputs' error messages
   */
-  $("input").click(function() {
+  function resetErrorMessages() {
     $("input").css("border","1px solid #eee");
     $(".amount").attr("placeholder","Enter Amount");
     $(".number").attr("placeholder", "Phone Number");
-  })
+  }
   
   /* 
     ** Convert valid mssidn to a uniform 254********* format 
@@ -46,6 +46,11 @@ $(document).ready(function() {
     }, 1000);
   }
   
+  
+  $("input").click(function() {
+    resetErrorMessages();
+  });
+  
  $("#inputForm").submit(function() {
     $(".processing span").text("Processing");
     $(".processing i").show();
@@ -63,6 +68,7 @@ $(document).ready(function() {
           number: parseMssidn(number)
         }
         
+        resetErrorMessages();
         /*Form input check successful*/
         alert('Post input data to Node server ' + JSON.stringify(data) +')');
         /* Make ajax call here */
