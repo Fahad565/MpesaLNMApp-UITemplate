@@ -1,25 +1,18 @@
 $(document).ready(function() {
-  
-  /*
-    ** Generic errorHandler fn for amount & mssidn input fields
-    */
+  /* Generic errorHandler fn for amount & mssidn input fields */
   function handleError(uiComponent) {
     var msg = uiComponent == "amount" ? "Amount" : "Phone Number";
     $("."+uiComponent).css("border","1px solid #e01515").attr("placeholder","Invalid " + msg);
   }
   
-  /*
-    ** Reset inputs' error messages
-  */
+  /* Reset input fields' error messages  */
   function resetErrorMessages() {
     $("input").css("border","1px solid #eee");
     $(".amount").attr("placeholder","Enter Amount");
     $(".number").attr("placeholder", "Phone Number");
   }
   
-  /* 
-    ** Convert valid mssidn to a uniform 254********* format 
-    */
+  /* Convert valid mssidn to a uniform 254********* format */
   function parseMssidn(n) {
         var strArray = n.split("");
         strArray[0] == "0" ? 
@@ -29,7 +22,7 @@ $(document).ready(function() {
         return strArray.join("");
   }
   
-  /*Helper function to be used to update app ui wrt processing timeout*/
+  /* Helper function to be used to update AppUI w.r.t. processing timeout */
   var defaultTimeout;
   function startCountdown() {
     $(".processing span span").text("[" + defaultTimeout + "s]");
@@ -39,7 +32,6 @@ $(document).ready(function() {
       if(defaultTimeout>=0) {
         $(".processing span span").text("[" + parsedTime + "s]");
       } else {
-        //console.log(defaultTimeout);
         $(".processing span span").text("");
         clearInterval(counter);
       }
@@ -51,26 +43,28 @@ $(document).ready(function() {
     resetErrorMessages();
   });
   
- $("#inputForm").submit(function() {
+ $("#inputForm").submit(function(e) {
     $(".processing span").text("Processing");
     $(".processing i").show();
     /* Request Validation */
     var amnt = $(".amount").val();
     var number = $(".number").val();
     
+   /*Input validation - LY1*/
     if(amnt.length !=0 && !(isNaN(amnt)) && amnt>0) {
       /* Only allow +254*********, 254*********, 07******** */
       var regExPattern = /^(?:254|\+254|0)?(7(?:(?:[129][0-9])|(?:0[0-8])|(4[0-1]))[0-9]{6})$/;
       var isNumberValid = regExPattern.test(number);
+      
       if(isNumberValid) {
-        var data = {
-          amnt: amnt,
-          number: parseMssidn(number)
-        }
+        var data = {amnt: amnt,number: parseMssidn(number)}
         
-        resetErrorMessages();
-        /*Form input check successful*/
+        /* Form input check successful */
         alert('Post input data to Node server ' + JSON.stringify(data) +')');
+        
+        /* Incase of input error, reset input fields to default styling */
+        resetErrorMessages();
+        
         /* Make ajax call here */
         
         /* End ajax call */
@@ -81,6 +75,5 @@ $(document).ready(function() {
     } else {
       handleError("amount");
     }
-    return false;
   });
 });
