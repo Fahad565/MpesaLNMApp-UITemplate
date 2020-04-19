@@ -15,10 +15,8 @@ $(document).ready(function() {
   /* Convert valid mssidn to a uniform 254********* format */
   function parseMssidn(n) {
         var strArray = n.split("");
-        strArray[0] == "0" ? 
-            strArray.splice(0, 1, "254") : 
-            (strArray[0] == "+" ? strArray.splice(0,1) : strArray);
-        
+        strArray[0] == "0" ? strArray.splice(0, 1, "254") : 
+                        (strArray[0] == "+" ? strArray.splice(0,1) : strArray);
         return strArray.join("");
   }
   
@@ -38,7 +36,6 @@ $(document).ready(function() {
     }, 1000);
   }
   
-  
   $("input").click(function() {
     resetErrorMessages();
   });
@@ -46,11 +43,11 @@ $(document).ready(function() {
  $("#inputForm").submit(function(e) {
     $(".processing span").text("Processing");
     $(".processing i").show();
-    /* Request Validation */
+    
     var amnt = $(".amount").val();
     var number = $(".number").val();
     
-   /*Input validation - LY1*/
+   /*Input validation - validation LY1*/
     if(amnt.length !=0 && !(isNaN(amnt)) && amnt>0) {
       /* Only allow +254*********, 254*********, 07******** */
       var regExPattern = /^(?:254|\+254|0)?(7(?:(?:[129][0-9])|(?:0[0-8])|(4[0-1]))[0-9]{6})$/;
@@ -68,7 +65,6 @@ $(document).ready(function() {
         /* Make ajax call here */
         
         /* End ajax call */
-        
       } else {
         handleError("number");
       }
