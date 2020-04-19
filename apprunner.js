@@ -50,8 +50,9 @@ function updateLocalCache(requestID, status) {
     if(entry.requestID == requestID) {
       entry.status = status;
       entry.callBackStatus = true;
+      entry.timeStamp = Utils.getTimeStamp();
       console.log(`LocalCache Update ${JSON.stringify(localCache)} @Test2[From CallBackURL]`);
-      break;
+      return entry;
     }
   }
 }
